@@ -1,0 +1,203 @@
+local M = {}
+
+M.general = {
+  
+  n = {
+    
+  ["Q"] = { "<nop>", "worst place in the universe" },
+
+    ["n"] = { "nzzzv", "center when moving to next / result" },
+    ["N"] = { "Nzzzv", "center when moving to previous / result" },
+
+    ["<leader>y"] = { [["+y]], "copy into system-clipboard" },
+    ["<leader>Y"] = { '[["+Y]]', "paste into system-clipboard" },
+    ["<leader>d"] = { '[["_d]]', "greatest remaps" },
+
+    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+    ["<leader>cx"] = { "<cmd>!chmod +x %<cr>", "make current bash file executable", opts = { silent = true } },
+
+    --close buffer
+    -- ["<leader>x"] = { ":bufdo close<cr>", "close buffer" },
+    ["<C-u>"] = { "<C-u>zz", "move half page up" },
+    ["<C-d>"] = { "<C-d>zz", "move half page down" },
+
+    --split window
+    ["<leader>sv"] = { "<C-w>v", "split vertically" },
+  },
+ 
+  v = {
+    ["<leader>y"] = { '[["+y]]', "greatest remaps" },
+    ["<leader>d"] = { '[["_d]]', "greatest remaps" },
+    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+  },
+
+  x = {
+    ["<leader>p"] = { '[["_dP]]', "greatest remap ever" },
+  },
+}
+
+M.nvterm = {
+  n = {
+
+    -- compile and run cargo project
+    ["<leader>cc"] = {
+      --
+      function()
+        local cargo_run = string.format "cargo run"
+
+        require("nvterm.terminal").send(cargo_run, "vertical")
+      end,
+
+      "use cargo to build and run a cargo project",
+    },
+
+    ["<leader>cr"] = {
+      --
+      function()
+        local file_path = vim.fn.expand "%"
+        local rustc_compile = string.format("rustc %s", file_path)
+
+        require("nvterm.terminal").send(rustc_compile, "vertical")
+      end,
+
+      "use cargo to build and run a cargo project",
+    },
+
+    ["<leader>cl"] = {
+      --
+      function()
+        local file_path = vim.fn.expand "%"
+        local latex_run = string.format("pdflatex %s", file_path)
+
+        require("nvterm.terminal").send(latex_run, "vertical")
+      end,
+
+      "use latex_run to build and display the generated pdf file",
+    },
+
+    ["<leader>bl"] = {
+      --
+      function()
+        local file_path = vim.fn.expand "%"
+        local python_run = string.format("python3 %s", file_path)
+
+        require("nvterm.terminal").send(python_run, "horizontal")
+      end,
+
+      "use python3 to run a .py file",
+    },
+
+    -- run c code
+    ["<leader>gc"] = {
+      function()
+        local file_path = vim.fn.expand "%"
+        local filename = vim.fn.expand("%:t"):match "^([^.]+)" .. ".out"
+
+        local compile_cmd = string.format("clear && g++ -o %s '%s' && ./%s", filename, file_path, filename)
+
+        require("nvterm.terminal").send(compile_cmd, "vertical")
+      end,
+
+      "use gcc to compile & run a c file",
+    },
+  },
+}
+
+M.blankline = {
+  plugin = true,
+
+  n = {
+    ["<leader>k"] = {
+      function()
+        local ok, start = require("indent_blankline.utils").get_current_context(
+          vim.g.indent_blankline_context_patterns,
+          vim.g.indent_blankline_use_treesitter_scope
+        )
+
+        if ok then
+          vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { start, 0 })
+          vim.cmd [[normal! _]]
+        end
+      end,
+
+      "Jump to current_context",
+    },
+  },
+}
+
+M.md_preview = {
+  plugin = true,
+  n = {
+    ["<leader>mp"] = { "<cmd>MarkdownPreviewToggle<CR>", "Toggle Markdown Preview" },
+  },
+}
+
+M.telescope = {
+  plugin = true,
+  n = {
+
+    ["<leader><space>"] = {
+      "<cmd>Telescope buffers<CR>",
+      "view buffers",
+    },
+  },
+
+vim.api.nvim_set_keymap('i', 'jj', '<Esc>', { noremap = true, silent = true })
+}
+M.dap={
+  plugin = true,
+  n ={
+    ["<leader>db"]={
+      "<cmd> DapToggleBreakPoint <CR>",
+      "Add breakpoint at line"
+    },
+["<leader>dus"] = {
+      function ()
+        local widgets = require('dap.ui.widgets');
+        local sidebar = widgets.sidebar(widgets.scopes);
+        sidebar.open();
+      end,
+      "Open debugging sidebar"
+    },
+
+    ["<leader>dr"]={
+
+      "<cmd> DapContinue <CR>",
+      "Start or continue the debugger"
+    }
+
+  }
+}
+M.dap_go = {
+  plugin = true,
+  n = {
+    ["<leader>dgt"] = {
+      function()
+        require('dap-go').debug_test()
+      end,
+      "Debug go test"
+    },
+    ["<leader>dgl"] = {
+      function()
+        require('dap-go').debug_last()
+      end,
+      "Debug last go test"
+    }
+  }
+
+}
+M.gopher = {
+  plugin = true,
+  n = {
+    ["<leader>gsj"] = {
+      "<cmd> GoTagAdd json <CR>",
+      "Add json struct tags"
+    },
+    ["<leader>gsy"] = {
+      "<cmd> GoTagAdd yaml <CR>",
+      "Add yaml struct tags"
+    }
+  }
+}
+
+return M
