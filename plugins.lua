@@ -66,27 +66,7 @@ local plugins = {
     "nvim-lua/plenary.nvim",
   },
 },
- {
-  "lewis6991/gitsigns.nvim",
-require("gitsigns").setup {
-  current_line_blame = true, -- Shows blame info inline
-},
-  event = { "BufReadPre", "BufNewFile" },
-  config = function()
-    require("gitsigns").setup {
-      signs = {
-        add          = { hl = "GitSignsAdd",    text = "▎", numhl = "GitSignsAddNr" },
-        change       = { hl = "GitSignsChange", text = "▎", numhl = "GitSignsChangeNr" },
-        delete       = { hl = "GitSignsDelete", text = "_", numhl = "GitSignsDeleteNr" },
-        topdelete    = { hl = "GitSignsDelete", text = "‾", numhl = "GitSignsDeleteNr" },
-        changedelete = { hl = "GitSignsChange", text = "~", numhl = "GitSignsChangeNr" },
-      },
-      current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
-    }
-  end,
-},
 }
-
 
 
 return plugins
